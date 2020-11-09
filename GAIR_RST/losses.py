@@ -160,7 +160,7 @@ def GAIR_trades_loss(model,
     """The TRADES KL-robustness regularization term proposed by
        Zhang et al., with added support for stability training and entropy
        regularization"""
-    pgd_steps = torch.zeros(len(x_natural))
+    Kappa = torch.zeros(len(x_natural))
 
     if beta == 0:
         logits = model(x_natural)
@@ -183,9 +183,10 @@ def GAIR_trades_loss(model,
                 x_adv.requires_grad_()
                 mid_logit = model(x_adv)
                 mid_predict = mid_logit.max(1, keepdim=True)[1]
+                # Update Kappa
                 for p in range(len(x_adv)):
                     if mid_predict[p] == y[p]:
-                        pgd_steps[p] += 1
+                        Kappa[p] += 1
                 with torch.enable_grad():
                     loss_kl = criterion_kl(F.log_softmax(model(x_adv), dim=1),
                                            F.softmax(model(x_natural), dim=1))
@@ -205,10 +206,10 @@ def GAIR_trades_loss(model,
                              'training' % distance)
 
     if Lambda <= 10.0:
-        cw_adv, cw_pgd_steps = pgd_generate(model,x_natural, y, epsilon, step_size, perturb_steps, loss_fn="cw",category="trades", rand_init=True)
+        cw_adv, _ = pgd_generate(model,x_natural, y, epsilon, step_size, perturb_steps, loss_fn="cw",category="trades", rand_init=True)
 
     
-    pgd_steps = pgd_steps.cuda()
+    Kappa = Kappa.cuda()
     model.train()  # moving to train mode to update batchnorm stats
 
     # zero gradient
@@ -221,16 +222,13 @@ def GAIR_trades_loss(model,
     logits = model(x_natural)
 
     loss_natural = F.cross_entropy(logits, y, ignore_index=-1, reduction='none')
-    #reweight = ((Lambda+(5-pgd_steps)).tanh()+1)/2
-    #normalized_reweight = reweight * len(reweight) / reweight.sum()
+
     loss_natural = loss_natural.mean()
     p_natural = F.softmax(logits, dim=1)
 
-    #loss_robust = criterion_kl(
-    #    logits_adv, p_natural) / batch_size
     if Lambda <= 10.0:
         criterion_kl = nn.KLDivLoss(reduce=False).cuda()
-        loss_robust = (criterion_kl(logits_adv, p_natural).sum(dim=1).mul(((Lambda+(5-pgd_steps)).tanh()+1)/2)+criterion_kl(logits_cw, p_natural).sum(dim=1).mul(1-((Lambda+(5-pgd_steps)).tanh()+1)/2)).sum()
+        loss_robust = (criterion_kl(logits_adv, p_natural).sum(dim=1).mul(((Lambda+((perturb_steps/2)-Kappa)).tanh()+1)/2)+criterion_kl(logits_cw, p_natural).sum(dim=1).mul(1-((Lambda+((perturb_steps/2)-Kappa)).tanh()+1)/2)).sum()
         loss_robust = loss_robust / batch_size
     else:
         loss_robust = criterion_kl(

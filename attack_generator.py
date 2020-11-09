@@ -1,5 +1,4 @@
 import numpy as np
-import pickle
 from models import *
 from torch.autograd import Variable
 
@@ -17,9 +16,10 @@ def cwloss(output, target,confidence=50, num_classes=10):
     loss = torch.sum(loss)
     return loss
 
-def pgd(model, data, target, epsilon, step_size, num_steps,loss_fn,category,rand_init):
+# Geometry-aware projected gradient descent (GA-PGD)
+def GA_PGD(model, data, target, epsilon, step_size, num_steps,loss_fn,category,rand_init):
     model.eval()
-    pgd_steps = torch.zeros(len(data))
+    Kappa = torch.zeros(len(data))
     if category == "trades":
         x_adv = data.detach() + 0.001 * torch.randn(data.shape).cuda().detach() if rand_init else data.detach()
         nat_output = model(data)
@@ -30,9 +30,10 @@ def pgd(model, data, target, epsilon, step_size, num_steps,loss_fn,category,rand
         x_adv.requires_grad_()
         output = model(x_adv)
         predict = output.max(1, keepdim=True)[1]
+        # Update Kappa
         for p in range(len(x_adv)):
             if predict[p] == target[p]:
-                pgd_steps[p] += 1
+                Kappa[p] += 1
         model.zero_grad()
         with torch.enable_grad():
             if loss_fn == "cent":
@@ -44,11 +45,12 @@ def pgd(model, data, target, epsilon, step_size, num_steps,loss_fn,category,rand
                 loss_adv = criterion_kl(F.log_softmax(output, dim=1),F.softmax(nat_output, dim=1))
         loss_adv.backward()
         eta = step_size * x_adv.grad.sign()
+        # Update adversarial data
         x_adv = x_adv.detach() + eta
         x_adv = torch.min(torch.max(x_adv, data - epsilon), data + epsilon)
         x_adv = torch.clamp(x_adv, 0.0, 1.0)
     x_adv = Variable(x_adv, requires_grad=False)
-    return x_adv, pgd_steps
+    return x_adv, Kappa
 
 def eval_clean(model, test_loader):
     model.eval()
@@ -72,7 +74,7 @@ def eval_robust(model, test_loader, perturb_steps, epsilon, step_size, loss_fn, 
     with torch.enable_grad():
         for data, target in test_loader:
             data, target = data.cuda(), target.cuda()
-            x_adv, _ = pgd(model,data,target,epsilon,step_size,perturb_steps,loss_fn,category,rand_init=random)
+            x_adv, _ = GA_PGD(model,data,target,epsilon,step_size,perturb_steps,loss_fn,category,rand_init=random)
             output = model(x_adv)
             test_loss += F.cross_entropy(output, target, size_average=False).item()
             pred = output.max(1, keepdim=True)[1]

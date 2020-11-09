@@ -1,9 +1,11 @@
 from models import *
 import torch
 import numpy as np
-from torch.autograd import Variable
 
-def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,random,omega):
+# Geometry-aware early stopped PGD
+def GA_earlystop(model, data, target, step_size, epsilon, perturb_steps, tau, type, random, omega):
+    # Based on code from https://github.com/zjfheart/Friendly-Adversarial-Training
+    
     model.eval()
     K = perturb_steps
     count = 0
@@ -11,11 +13,11 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
     output_target = []
     output_adv = []
     output_natural = []
-    output_steps = []
+    output_Kappa = []
 
     control = torch.zeros(len(target)).cuda()
     control += tau
-    pgd_steps = torch.zeros(len(data)).cuda()
+    Kappa = torch.zeros(len(data)).cuda()
 
     if random == False:
         iter_adv = data.cuda().detach()
@@ -37,6 +39,7 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
         pred = output.max(1, keepdim=True)[1]
         output_index = []
         iter_index = []
+
         for idx in range(len(pred)):
             if pred[idx] != target[idx]:
                 if control[idx]==0:
@@ -45,7 +48,8 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
                     control[idx]-=1
                     iter_index.append(idx)
             else:
-                pgd_steps[idx] += 1
+                # Update Kappa
+                Kappa[idx] += 1
                 iter_index.append(idx)
 
         if (len(output_index)!=0):
@@ -54,13 +58,13 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
                 output_adv = iter_adv[output_index].reshape(-1, 3, 32, 32).cuda()
                 output_natural = iter_clean_data[output_index].reshape(-1, 3, 32, 32).cuda()
                 output_target = iter_target[output_index].reshape(-1).cuda()
-                output_steps = pgd_steps[output_index].reshape(-1).cuda()
+                output_Kappa = Kappa[output_index].reshape(-1).cuda()
             else:
                 # incorrect adv data should not keep iterated
                 output_adv = torch.cat((output_adv, iter_adv[output_index].reshape(-1, 3, 32, 32).cuda()), dim=0)
                 output_natural = torch.cat((output_natural, iter_clean_data[output_index].reshape(-1, 3, 32, 32).cuda()), dim=0)
                 output_target = torch.cat((output_target, iter_target[output_index].reshape(-1).cuda()), dim=0)
-                output_steps = torch.cat((output_steps, pgd_steps[output_index].reshape(-1).cuda()), dim=0)
+                output_Kappa = torch.cat((output_Kappa, Kappa[output_index].reshape(-1).cuda()), dim=0)
 
         model.zero_grad()
         with torch.enable_grad():
@@ -73,7 +77,7 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
         grad = iter_adv.grad
 
         if len(iter_index) != 0:
-            pgd_steps = pgd_steps[iter_index]
+            Kappa = Kappa[iter_index]
             control = control[iter_index]
             iter_adv = iter_adv[iter_index]
             iter_clean_data = iter_clean_data[iter_index]
@@ -86,17 +90,18 @@ def earlystop(model, data, target, step_size, epsilon, perturb_steps,tau,type,ra
             iter_adv = torch.clamp(iter_adv, 0, 1)
             count += len(iter_target)
         else:
-            return output_adv, output_target, output_natural, count, output_steps
+            return output_adv, output_target, output_natural, count, output_Kappa
         K = K-1
 
     if (len(output_target) == 0):
         output_target = iter_target.reshape(-1).squeeze().cuda()
         output_adv = iter_adv.reshape(-1, 3, 32, 32).cuda()
         output_natural = iter_clean_data.reshape(-1, 3, 32, 32).cuda()
-        output_steps = pgd_steps.reshape(-1).cuda()
+        output_Kappa = Kappa.reshape(-1).cuda()
     else:
         output_adv = torch.cat((output_adv, iter_adv.reshape(-1, 3, 32, 32)), dim=0).cuda()
         output_target = torch.cat((output_target, iter_target.reshape(-1)), dim=0).squeeze().cuda()
         output_natural = torch.cat((output_natural, iter_clean_data.reshape(-1, 3, 32, 32).cuda()),dim=0).cuda()
-        output_steps = torch.cat((output_steps, pgd_steps.reshape(-1)),dim=0).squeeze().cuda()
-    return output_adv, output_target, output_natural, count, output_steps
+        output_Kappa = torch.cat((output_Kappa, Kappa.reshape(-1)),dim=0).squeeze().cuda()
+    
+    return output_adv, output_target, output_natural, count, output_Kappa

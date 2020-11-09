@@ -1,18 +1,14 @@
 import os
-import time
 import argparse
 import torchvision
 import torch.optim as optim
 from torchvision import transforms
-import pickle
-import datetime
 from models import *
-from earlystop import earlystop
+from earlystop import GA_earlystop
 from GAIRLoss import GAIRLoss
 import numpy as np
 import attack_generator as attack
-from utils import Logger, AverageMeter
-from torch.autograd import Variable as V
+from utils import Logger
 
 parser = argparse.ArgumentParser(description='GAIR-FAT')
 parser.add_argument('--epochs', type=int, default=120, metavar='N', help='number of epochs to train')
@@ -33,26 +29,23 @@ parser.add_argument('--width-factor',type=int,default=10,help='WRN width factor'
 parser.add_argument('--drop-rate',type=float,default=0.0, help='WRN drop rate')
 parser.add_argument('--resume',type=str,default=None,help='whether to resume training')
 parser.add_argument('--out-dir',type=str,default='./GAIR_FAT_result',help='dir of output')
-parser.add_argument('--num-classes',type=int,default=10,help='num of classes')
-parser.add_argument('--lr-schedule', default='piecewise', choices=['superconverge', 'piecewise', 'linear', 'piecewisesmoothed', 'piecewisezoom', 'onedrop', 'multipledecay', 'cosine'])
+parser.add_argument('--lr-schedule', default='piecewise', choices=['superconverge', 'piecewise', 'linear', 'onedrop', 'multipledecay', 'cosine'])
 parser.add_argument('--lr-max', default=0.1, type=float)
 parser.add_argument('--lr-one-drop', default=0.01, type=float)
 parser.add_argument('--lr-drop-epoch', default=100, type=int)
-parser.add_argument('--beta',type=float, default=0.0, help='parameter for join loss')
-parser.add_argument('--beta_max',type=float, default=100.0, help='max beta')
-parser.add_argument('--beta_schedule', default='fixed', choices=['linear', 'piecewise', 'fixed'])
-parser.add_argument('--loss_function', default='Tanh', choices=['Discrete','Sigmoid','Tanh'])
+parser.add_argument('--Lambda',type=float, default=0.0, help='parameter for join loss')
+parser.add_argument('--Lambda_max',type=float, default=float('inf'), help='max Lambda')
+parser.add_argument('--Lambda_schedule', default='fixed', choices=['linear', 'piecewise', 'fixed'])
+parser.add_argument('--weight_assignment_function', default='Tanh', choices=['Discrete','Sigmoid','Tanh'])
 parser.add_argument('--begin_epoch', type=int, default=60, help='when to use GAIRLoss')
-
 args = parser.parse_args()
 
-# settings
+# Training settings
 seed = args.seed
 epsilon = args.epsilon
 step_size = args.step_size
 num_steps = args.num_steps
 dynamictau = args.dynamictau
-lr = args.lr_max
 momentum = args.momentum
 weight_decay = args.weight_decay
 omega = args.omega
@@ -63,23 +56,13 @@ drop_rate = args.drop_rate
 resume = args.resume
 out_dir = args.out_dir
 
-
 torch.manual_seed(seed)
 np.random.seed(seed)
 torch.cuda.manual_seed_all(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
-
-if args.net == "smallcnn_2_2":
-    model = SmallCNN_2_2().cuda()
-    net = "smallcnn_2_2"
-if args.net == "smallcnn_4_3":
-    model = SmallCNN_4_3().cuda()
-    net = "smallcnn_4_3"
-if args.net == "smallcnn_8_4":
-    model = SmallCNN_8_4().cuda()
-    net = "smallcnn_8_4"
+# Models and optimizer
 if args.net == "smallcnn":
     model = SmallCNN().cuda()
     net = "smallcnn"
@@ -88,6 +71,7 @@ if args.net == "resnet18":
     net = "resnet18"
 if args.net == "preactresnet18":
     model = PreActResNet18().cuda()
+    net = "preactresnet18"
 if args.net == "WRN":
     model = Wide_ResNet_Madry(depth=depth, num_classes=10, widen_factor=width_factor, dropRate=drop_rate).cuda()
     net = "WRN{}-{}-dropout{}".format(depth,width_factor,drop_rate)
@@ -95,11 +79,13 @@ if args.net == "WRN":
 model = torch.nn.DataParallel(model)
 optimizer = optim.SGD(model.parameters(), lr=args.lr_max, momentum=momentum, weight_decay=weight_decay)
 
+# Learning schedules
 if args.lr_schedule == 'superconverge':
     lr_schedule = lambda t: np.interp([t], [0, args.epochs * 2 // 5, args.epochs], [0, args.lr_max, 0])[0]
 elif args.lr_schedule == 'piecewise':
     def lr_schedule(t):
         if args.epochs >= 110:
+            # Train Wide-ResNet
             if t / args.epochs < 0.5:
                 return args.lr_max
             elif t / args.epochs < 0.75:
@@ -109,6 +95,7 @@ elif args.lr_schedule == 'piecewise':
             else:
                 return args.lr_max / 200.
         else:
+            # Train ResNet
             if t / args.epochs < 0.3:
                 return args.lr_max
             elif t / args.epochs < 0.6:
@@ -130,38 +117,17 @@ elif args.lr_schedule == 'cosine':
     def lr_schedule(t): 
         return args.lr_max * 0.5 * (1 + np.cos(t / args.epochs * np.pi))
 
-
+# Store path
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
+# Save checkpoint
 def save_checkpoint(state, checkpoint=out_dir, filename='checkpoint.pth.tar'):
     filepath = os.path.join(checkpoint, filename)
     torch.save(state, filepath)
     
-start_epoch = 0
-
-# Resume 
-title = 'GAIR-FAT'
-best_acc = 0
-if resume:
-    # resume directly point to checkpoint.pth.tar
-    print ('==> GAIR-FAT Resuming from checkpoint ..')
-    print(resume)
-    assert os.path.isfile(resume)
-    out_dir = os.path.dirname(resume)
-    checkpoint = torch.load(resume)
-    start_epoch = checkpoint['epoch']
-    best_acc = checkpoint['test_pgd20_acc']
-    model.load_state_dict(checkpoint['state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
-    logger_test = Logger(os.path.join(out_dir, 'log_results.txt'), title=title, resume=True)
-else:
-    print('==> GAIR-FAT')
-    logger_test = Logger(os.path.join(out_dir, 'log_results.txt'), title=title)
-    logger_test.set_names(['Epoch', 'Natural Test Acc', 'PGD20 Acc'])
-
-
-def train(epoch, model, train_loader, optimizer, tau, beta):
+# Get adversarially robust network
+def train(epoch, model, train_loader, optimizer, tau, Lambda):
     
     lr = 0
     num_data = 0
@@ -169,9 +135,11 @@ def train(epoch, model, train_loader, optimizer, tau, beta):
 
     for batch_idx, (data, target) in enumerate(train_loader):
 
-        data, target = data.cuda(), target.cuda()
         loss = 0
-        output_adv, output_target, output_natural, count, pgd_steps = earlystop(model,data,target,step_size=args.step_size,epsilon=args.epsilon,perturb_steps=args.num_steps,tau=tau,type="fat",random=random,omega=omega)
+        data, target = data.cuda(), target.cuda()
+
+        # Get adversarial data and geometry value
+        output_adv, output_target, output_natural, count, Kappa = GA_earlystop(model,data,target,step_size=args.step_size,epsilon=args.epsilon,perturb_steps=args.num_steps,tau=tau,type="fat",random=random,omega=omega)
 
 
         model.train()
@@ -180,11 +148,11 @@ def train(epoch, model, train_loader, optimizer, tau, beta):
         optimizer.zero_grad()
         
         logit = model(output_adv)
-        pred = logit.max(1, keepdim=True)[1]
 
         if (epoch + 1) >= args.begin_epoch:
-            pgd_steps = pgd_steps.cuda() 
-            loss = GAIRLoss(logit, output_target, args.num_steps, pgd_steps, beta, loss_fn=args.loss_function, category="FAT")
+            Kappa = Kappa.cuda() 
+            # Calculate weight assignment according to geometry value
+            loss = GAIRLoss(logit, output_target, args.num_steps, Kappa, Lambda, loss_fn=args.weight_assignment_function)
         else:
             loss = nn.CrossEntropyLoss(reduce="mean")(logit, output_target)
         train_robust_loss += loss.item() * len(output_adv)
@@ -198,19 +166,7 @@ def train(epoch, model, train_loader, optimizer, tau, beta):
 
     return train_robust_loss, lr
 
-
-def eval_test(model, test_loader):
-    model.eval()
-    correct = 0
-    with torch.no_grad():
-        for data, target in test_loader:
-            data, target = data.cuda(), target.cuda()
-            output = model(data)
-            pred = output.max(1, keepdim=True)[1]
-            correct += pred.eq(target.view_as(pred)).sum().item()
-    test_accuracy = correct / len(test_loader.dataset)
-    return test_accuracy
-
+# Adjust tau
 def adjust_tau(epoch, dynamictau):
     tau = args.tau
     if dynamictau:
@@ -222,38 +178,40 @@ def adjust_tau(epoch, dynamictau):
             tau = 6
     return tau
 
-def adjust_beta(epoch):
+def adjust_Lambda(epoch):
     if args.epochs >= 110:
-        beta = args.beta_max
-        if args.beta_schedule == 'linear':
+        # Train Wide-ResNet
+        Lambda = args.Lambda_max
+        if args.Lambda_schedule == 'linear':
             if epoch >= 60:
-                beta = args.beta_max - (epoch/args.epochs) * (args.beta_max - args.beta)
-        elif args.beta_schedule == 'piecewise':
+                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - args.Lambda)
+        elif args.Lambda_schedule == 'piecewise':
             if epoch >= 60:
-                beta = args.beta
+                Lambda = args.Lambda
             elif epoch >= 90:
-                beta = args.beta-1.0
+                Lambda = args.Lambda-1.0
             elif epoch >= 110:
-                beta = args.beta-1.5
-        elif args.beta_schedule == 'fixed':
+                Lambda = args.Lambda-1.5
+        elif args.Lambda_schedule == 'fixed':
             if epoch >= 60:
-                beta = args.beta
+                Lambda = args.Lambda
     else:
-        beta = args.beta_max
-        if args.beta_schedule == 'linear':
+        # Train ResNet
+        Lambda = args.Lambda_max
+        if args.Lambda_schedule == 'linear':
             if epoch >= 30:
-                beta = args.beta_max - (epoch/args.epochs) * (args.beta_max - args.beta)
-        elif args.beta_schedule == 'piecewise':
+                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - args.Lambda)
+        elif args.Lambda_schedule == 'piecewise':
             if epoch >= 30:
-                beta = args.beta
+                Lambda = args.Lambda
             elif epoch >= 60:
-                beta = args.beta-2.0
-        elif args.beta_schedule == 'fixed':
+                Lambda = args.Lambda-2.0
+        elif args.Lambda_schedule == 'fixed':
             if epoch >= 30:
-                beta = args.beta
-    return beta
+                Lambda = args.Lambda
+    return Lambda
 
-# setup data loader
+# Setup data loader
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
@@ -279,20 +237,41 @@ if args.dataset == "mnist":
     testset = torchvision.datasets.MNIST(root='~/dataset/MNIST', train=False, download=True, transform=transforms.ToTensor())
     test_loader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=1,pin_memory=True)
 
-## Training get started
+# Resume 
+title = 'GAIR-FAT'
+best_acc = 0
+start_epoch = 0
+if resume:
+    # Resume directly point to checkpoint.pth.tar
+    print ('==> GAIR-FAT Resuming from checkpoint ..')
+    print(resume)
+    assert os.path.isfile(resume)
+    out_dir = os.path.dirname(resume)
+    checkpoint = torch.load(resume)
+    start_epoch = checkpoint['epoch']
+    best_acc = checkpoint['test_pgd20_acc']
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+    logger_test = Logger(os.path.join(out_dir, 'log_results.txt'), title=title, resume=True)
+else:
+    print('==> GAIR-FAT')
+    logger_test = Logger(os.path.join(out_dir, 'log_results.txt'), title=title)
+    logger_test.set_names(['Epoch', 'Natural Test Acc', 'PGD20 Acc'])
 
+## Training get started
 test_nat_acc = 0
 test_pgd20_acc = 0
 
 for epoch in range(start_epoch, args.epochs):
 
+    # Get tau and lambda
     tau = adjust_tau(epoch + 1, dynamictau)
-    beta = adjust_beta(epoch + 1)
+    Lambda = adjust_Lambda(epoch + 1)
     
     # Adversarial training
-    train_robust_loss, lr = train(epoch, model, train_loader, optimizer, tau, beta)
+    train_robust_loss, lr = train(epoch, model, train_loader, optimizer, tau, Lambda)
 
-    # Evalutions the same as DAT.
+    # Evalutions similar to DAT.
     _, test_nat_acc = attack.eval_clean(model, test_loader)
     _, test_pgd20_acc = attack.eval_robust(model, test_loader, perturb_steps=20, epsilon=0.031, step_size=0.031 / 4,loss_fn="cent", category="Madry", random=True)
 
