@@ -26,7 +26,7 @@ Refer to [FAT's GitHub](https://github.com/zjfheart/Friendly-Adversarial-Trainin
 
 OR using codes in this repo by setting
 
-```python GAIRAT --epsilon 0.031 --net 'resnet18' --Lambda_max =float('inf')``` 
+```python GAIRAT --epsilon 0.031 --net 'resnet18' --Lambda_max float('inf')``` 
 
 to recover the standard AT (Madry's).
 
