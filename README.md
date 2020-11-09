@@ -45,11 +45,11 @@ More attackable data are closer to the decision boundary.
 More guarded data are farther away from the decision boundary.
 
 <p align="center">
-    <img src="images/motivation.png" width="500"\>
-    <img src="images/pca01.png" width="450"\>
+    <img src="images/motivation.png" width="400"\>
+    <img src="images/pca01.png" width="350"\>
 </p>
 <p align="left">
-More attackable data (lighter red and blue) are closer to the decision boundary; more guarded data (darker red and blue) are farther away from the decision boundary. *Top panel*: Two toy examples. *Bottom panel*: The model’s output distribution of two randomly selected classes from the CIFAR-10 dataset. The degree of robustness (denoted by the color gradient) of a data point is calculated based on the least number of iterations κ that PGD needs to find its misclassified adversarial variant. </p>
+More attackable data (lighter red and blue) are closer to the decision boundary; more guarded data (darker red and blue) are farther away from the decision boundary. *Left panel*: Two toy examples. *Right panel*: The model’s output distribution of two randomly selected classes from the CIFAR-10 dataset. The degree of robustness (denoted by the color gradient) of a data point is calculated based on the least number of iterations κ that PGD needs to find its misclassified adversarial variant. </p>
 
 
 ## Therefore, given the limited model capacity, we should treat data differently for updating the model in adversarial training.
@@ -61,5 +61,22 @@ To implement the idea, we propose geometry-aware instance-reweighted adversarial
 </p>
 <p align="left">
 The illustration of GAIRAT. GAIRAT explicitly gives larger weights on the losses of adversarial data (larger red), whose natural counterparts are closer to the decision boundary (lighter blue). GAIRAT explicitly gives smaller weights on the losses of adversarial data (smaller red), whose natural counterparts are farther away from the decision boundary (darker blue). </p>
-    
+
+## GAIRAT's Implementation
+For updating the model, GAIRAT assigns instance dependent weight on the loss of the adversarial data (found in ```GAIRAT.py```). <br/>
+The instance dependent weight depends on ```num_steps```, which indicates the least PGD step numbers for the misclassified adversarial variant. <br/>
+
+The details will be determined once the name are fixed.........
+
+## Preferred Prerequisites
+
+* Python (3.6)
+* Pytorch (1.2.0)
+* CUDA
+* numpy
+
+## Running GAIRAT, GAIR-FAT on benchmark datasets  (CIFAR-10 and SVHN)
+
+
+### White-box evaluations on WRN-32-10
     
