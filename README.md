@@ -11,8 +11,8 @@ For more details of the nature of adversarial training, refer to this [FAT's Git
 In this repo, you will know: 
 ## FACT 1: Model Capacity is NOT enough for adversarial training.
 <p align="center">
-    <img src="images/diff_net_error_white.png" width="450"\>
-   <img src="images/eps_error_white.png" width="450"\>
+    <img src="images/diff_net_error_white.png" width="400"\>
+   <img src="images/eps_error_white.png" width="400"\>
 </p>
 <p align="left">
 We plot standard training error (Natural) and adversarial training error (PGD-10) over the training epochs of the standard AT (Madry's) on CIFAR-10 dataset. 
