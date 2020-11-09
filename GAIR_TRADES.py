@@ -146,8 +146,8 @@ else:
 
 def TRADES_loss(adv_logits, natural_logits, target, beta_trades, beta, pgd_steps):
     # Based on the repo TREADES: https://github.com/yaodongyu/TRADES
-    loss_natural = GAIRLoss(adv_logits, target, args.num_steps, pgd_steps, beta, loss_fn=args.loss_function, category="TRADES", adv_or_nat="nat", adv_boost=args.adv_boost, nat_boost=args.nat_boost)
-    loss_robust = GAIRLoss(adv_logits, target, args.num_steps, pgd_steps, beta, loss_fn=args.loss_function, category="TRADES", adv_or_nat="adv", adv_boost=args.adv_boost, nat_boost=args.nat_boost)
+    loss_natural = GAIRLoss(adv_logits, target, args.num_steps, pgd_steps, beta, loss_fn=args.loss_function, category="TRADES", nat_logit=natural_logits, adv_or_nat="nat", adv_boost=args.adv_boost, nat_boost=args.nat_boost)
+    loss_robust = GAIRLoss(adv_logits, target, args.num_steps, pgd_steps, beta, loss_fn=args.loss_function, category="TRADES", nat_logit=natural_logits, adv_or_nat="adv", adv_boost=args.adv_boost, nat_boost=args.nat_boost)
     loss = loss_natural + beta_trades * loss_robust
     return loss
 
