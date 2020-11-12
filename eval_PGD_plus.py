@@ -18,7 +18,7 @@ from torchvision import transforms
 from attack_pgd import pgd
 from attack_cw import cw
 import torch.backends.cudnn as cudnn
-from utils import get_model
+from utils_eval import get_model
 
 
 def eval_adv_test(model, device, test_loader, attack, attack_params,
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path',
                         help='Model for attack evaluation')
     parser.add_argument('--model', '-m', default='wrn-32-10', type=str,
-                        help='Name of the model')
+                        help='Name of the model: wrn-XX-XX, resnet-XX, small-cnn')
     parser.add_argument('--output_suffix', default='', type=str,
                         help='String to add to log filename')
     parser.add_argument('--batch_size', type=int, default=128, metavar='N',

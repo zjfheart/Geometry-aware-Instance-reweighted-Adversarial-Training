@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES='0' python3 eval.py --model='../../GAIR_RST/checkpoint-epoch200.pt' --log_path='./GAIR_RST_results.txt' --save_dir='./GAIR_RST_results' &
