@@ -74,6 +74,7 @@ The instance dependent weight depends on ```num_steps```, which indicates the le
 * Pytorch (1.2.0)
 * CUDA
 * numpy
+* foolbox
 
 ## Running GAIRAT, GAIR-FAT on benchmark datasets  (CIFAR-10 and SVHN)
 (To be updated)
