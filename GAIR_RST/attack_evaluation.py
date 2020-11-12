@@ -186,7 +186,7 @@ if __name__ == '__main__':
     # set up data loader
     transform_test = transforms.Compose([transforms.ToTensor(), ])
     testset = SemiSupervisedDataset(base_dataset=args.dataset,
-                                    train=False, root='~/dataset/cifar-10',
+                                    train=False, root='./data/cifar-10',
                                     download=True,
                                     transform=transform_test)
 

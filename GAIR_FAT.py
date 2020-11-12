@@ -33,7 +33,7 @@ parser.add_argument('--lr-schedule', default='piecewise', choices=['superconverg
 parser.add_argument('--lr-max', default=0.1, type=float)
 parser.add_argument('--lr-one-drop', default=0.01, type=float)
 parser.add_argument('--lr-drop-epoch', default=100, type=int)
-parser.add_argument('--Lambda',type=float, default=0.0, help='parameter for join loss')
+parser.add_argument('--Lambda',type=str, default='0.0', help='parameter for join loss')
 parser.add_argument('--Lambda_max',type=float, default=float('inf'), help='max Lambda')
 parser.add_argument('--Lambda_schedule', default='fixed', choices=['linear', 'piecewise', 'fixed'])
 parser.add_argument('--weight_assignment_function', default='Tanh', choices=['Discrete','Sigmoid','Tanh'])
@@ -181,36 +181,37 @@ def adjust_tau(epoch, dynamictau):
     return tau
 
 def adjust_Lambda(epoch):
+    Lam = float(args.Lambda)
     if args.epochs >= 110:
         # Train Wide-ResNet
         Lambda = args.Lambda_max
         if args.Lambda_schedule == 'linear':
             if epoch >= 60:
-                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - args.Lambda)
+                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - Lam)
         elif args.Lambda_schedule == 'piecewise':
             if epoch >= 60:
-                Lambda = args.Lambda
+                Lambda = Lam
             elif epoch >= 90:
-                Lambda = args.Lambda-1.0
+                Lambda = Lam-1.0
             elif epoch >= 110:
-                Lambda = args.Lambda-1.5
+                Lambda = Lam-1.5
         elif args.Lambda_schedule == 'fixed':
             if epoch >= 60:
-                Lambda = args.Lambda
+                Lambda = Lam
     else:
         # Train ResNet
         Lambda = args.Lambda_max
         if args.Lambda_schedule == 'linear':
             if epoch >= 30:
-                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - args.Lambda)
+                Lambda = args.Lambda_max - (epoch/args.epochs) * (args.Lambda_max - Lam)
         elif args.Lambda_schedule == 'piecewise':
             if epoch >= 30:
-                Lambda = args.Lambda
+                Lambda = Lam
             elif epoch >= 60:
-                Lambda = args.Lambda-2.0
+                Lambda = Lam-2.0
         elif args.Lambda_schedule == 'fixed':
             if epoch >= 30:
-                Lambda = args.Lambda
+                Lambda = Lam
     return Lambda
 
 # Setup data loader

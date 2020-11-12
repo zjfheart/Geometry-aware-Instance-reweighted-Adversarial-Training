@@ -39,7 +39,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--dataset', type=str, default='cifar10',
                     choices=DATASETS,
                     help='The dataset to use for training)')
-parser.add_argument('--data_dir', default='~/dataset', type=str,
+parser.add_argument('--data_dir', default='./data', type=str,
                     help='Directory where datasets are located')
 parser.add_argument('--svhn_extra', action='store_true', default=False,
                     help='Adds the extra SVHN data')
