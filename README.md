@@ -63,7 +63,7 @@ To implement the idea, we propose geometry-aware instance-reweighted adversarial
 The illustration of GAIRAT. GAIRAT explicitly gives larger weights on the losses of adversarial data (larger red), whose natural counterparts are closer to the decision boundary (lighter blue). GAIRAT explicitly gives smaller weights on the losses of adversarial data (smaller red), whose natural counterparts are farther away from the decision boundary (darker blue). </p>
 
 ## GAIRAT's Implementation
-For updating the model, GAIRAT assigns instance dependent weight (```reweight```) on the loss of the adversarial data (found in ```GAIRLoss.py```). <br/>
+For updating the model, GAIRAT assigns instance dependent weight (```reweight```) on the loss of the adversarial data (found in ```GAIR.py```). <br/>
 The instance dependent weight depends on ```num_steps```, which indicates the least PGD step numbers needed for the misclassified adversarial variant. <br/>
 
 
@@ -88,8 +88,8 @@ CUDA_VISIBLE_DEVICES='0' python GART_FAT.py
 * How to recover the original FAT and AT using our code? 
 
 ```bash
-CUDA_VISIBLE_DEVICES='0' python GARAT.py --output_dir './AT_results/' 
-CUDA_VISIBLE_DEVICES='0' python GART_FAT.py 
+CUDA_VISIBLE_DEVICES='0' python GARAT.py --Lambda 'inf' --output_dir './AT_results' 
+CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --Lambda 'inf' --output_dir './FAT_results' 
 ```
 
 After running, you can find ```./GAIRAT_result/log_results.txt``` and ```./GAIR_FAT_result/log_results.txt``` for checking Natural Acc. and PGD-20 test Acc. <br/>
