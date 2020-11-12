@@ -125,7 +125,7 @@ chmod +x ./GAIR_RST/run_training.sh
 3. We evaluate the robust model using natural test accuracy on natural test data and roubust test accuracy by [Auto Attack](https://github.com/fra31/auto-attack). 
 Auto Attack is combination of two white box attacks and two black box attacks. 
 ```bash
-chmod +x ./GAIR_RST/autoattack/examples/run_training.sh
+chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 ```
 
 ### White-box evaluations on WRN-28-10
@@ -144,7 +144,7 @@ We welcome various attack methods to attack our defense models. For cifar-10 dat
 
 Download our pretrained models ```checkpoint-epoch200.pt``` into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link](https://drive.google.com/drive/folders/1Ry7q_NbCgeJsjSwxXpRfi1zSc_jdVJf6?usp=sharing).
 
-You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples/run.sh```
+You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples/run_eval.sh```
 
 ## Reference
 ```
