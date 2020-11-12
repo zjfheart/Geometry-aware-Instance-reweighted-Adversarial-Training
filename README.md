@@ -132,7 +132,7 @@ chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 
 ### White-box evaluations on WRN-28-10
 
- Defense (Exist public available models)              	| Natural Acc. 	| AA Acc. |
+ Defense (public available models)              	| Natural Acc. 	| AA Acc. |
 |-----------------------|-----------------------|------------------|
 [pre-training](https://arxiv.org/pdf/1901.09960.pdf) | 87.11%	| 54.92% | 
 | [RST](https://arxiv.org/abs/1905.13736)  		|  89.69%  	|     59.53%      |
