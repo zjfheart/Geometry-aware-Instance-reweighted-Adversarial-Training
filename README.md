@@ -121,8 +121,11 @@ In terms of both metrics, i.e., natural acc and robustness, we can obtain the be
 chmod +x ./GAIR_RST/run_training.sh
 ./GAIR_RST/run_training.sh
 ```
-3. 
-
+3. We evaluate our robust model using natural test accuracy and roubust test accuracy by [Auto Attack](https://github.com/fra31/auto-attack). 
+Auto Attack is combination of two white box attacks and two black box attacks. 
+```bash
+chmod +x ./GAIR_RST/autoattack/examples/run_training.sh
+```
 
 ### White-box evaluations on WRN-28-10
 
@@ -132,3 +135,26 @@ chmod +x ./GAIR_RST/run_training.sh
 |[MART](https://openreview.net/forum?id=rklOg6EFwS)		|87.50%	|  56.29%	| 
 | [AT-AWP](https://arxiv.org/abs/2004.05884)  |  88.25   	|60.04%| 
 | GAIR-RST		|  **89.80%**   	|   **60.90%**   		|
+
+
+### Wanna download our superior model for other purposes? Sure! 
+
+We welcome various attack methods to attack our defense models. For cifar-10 dataset, we normalize all images into ```[0,1]```. <br/>
+
+Download our pretrained models into the folder ``./GAIR_RST/GARR_RST_results`` hrough this [Google Drive link]().
+
+You can evaluate this model through ```./GAIR_RST/autoattack/examples/run_training.sh```
+
+## Reference
+```
+@article{zhang2020geometry,
+  title={Geometry-aware Instance-reweighted Adversarial Training},
+  author={Zhang, Jingfeng and Zhu, Jianing and Niu, Gang and Han, Bo and Sugiyama, Masashi and Kankanhalli, Mohan},
+  journal={arXiv:2010.01736},
+  year={2020}
+}
+```
+
+# Contact
+Please contact j-zhang@comp.nus.edu.sg and zhujianing9810@gmail.com if you have any question on the codes.
+
