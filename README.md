@@ -77,7 +77,6 @@ The instance dependent weight depends on ```num_steps```, which indicates the le
 * foolbox
 
 ## Running GAIRAT, GAIR-FAT on benchmark datasets  (CIFAR-10 and SVHN)
-(To be updated)
 
 Here are examples:
 
@@ -104,12 +103,14 @@ CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIR_FAT_result/best
 
 ### White-box evaluations on WRN-32-10
 
- Defense              	| Natural Acc. 	| PGD-20 Acc. | PGD+ Acc. | 
+ Defense （best checkpoint）        	| Natural Acc. 	| PGD-20 Acc. | PGD+ Acc. | 
 |-----------------------|-----------------------|------------------|-----------------|
-|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 00.00%	|  00.00%	|     00.00%	    |
-| [FAT](https://arxiv.org/abs/2002.11242)  		|  00.00%  	|     00.00%      |     00.00%     |
-| GAIRAT  |  **00.00**![](http://latex.codecogs.com/gif.latex?\pm)0.221%   	|00.00![](http://latex.codecogs.com/gif.latex?\pm)0.355%| 46.13![](http://latex.codecogs.com/gif.latex?\pm)0.049%|
-| GAIR-FAT		|  00.00%   	|   00.00%   		|     00.00%    	|
+|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 86.92 %	|  51.96%	|    51.28%	    |
+| [FAT](https://arxiv.org/abs/2002.11242)  		|  **89.16%**  	|     51.24%      |     46.14%     |
+| GAIRAT  |  85.75%   	|**57.81%**| **55.61%**|
+| GAIR-FAT		|  88.59%   	|   56.21%   		|     53.50%    	|
+
+For more details, refer to Table 1 in the paper. 
 
 ## Benchmarking robustness with additional 500K unlabeled data on CIFAR-10 dataset.
 
@@ -131,11 +132,13 @@ chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 
 ### White-box evaluations on WRN-28-10
 
- Defense              	| Natural Acc. 	| AA Acc. |
+ Defense (public available models)              	| Natural Acc. 	| AA Acc. |
 |-----------------------|-----------------------|------------------|
+[pre-training](https://arxiv.org/pdf/1901.09960.pdf) | 87.11%	| 54.92% | 
 | [RST](https://arxiv.org/abs/1905.13736)  		|  89.69%  	|     59.53%      |
 |[MART](https://openreview.net/forum?id=rklOg6EFwS)		|87.50%	|  56.29%	| 
-| [AT-AWP](https://arxiv.org/abs/2004.05884)  |  88.25   	|60.04%| 
+[HYDRA](https://arxiv.org/pdf/2002.10509.pdf) | 88.98% | 57.14%
+|[AT-AWP](https://arxiv.org/abs/2004.05884)  |  88.25%   |60.04%| 
 | GAIR-RST		|  **89.80%**   	|   **60.90%**   		|
 
 
