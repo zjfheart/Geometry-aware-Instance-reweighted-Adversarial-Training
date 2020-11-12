@@ -94,7 +94,7 @@ CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --Lambda 'inf' --output_dir './FAT_r
 
 After running, you can find ```./GAIRAT_result/log_results.txt``` and ```./GAIR_FAT_result/log_results.txt``` for checking Natural Acc. and PGD-20 test Acc. <br/>
 We also evaluate our models using PGD+. PGD+ is the same as ``PGD_ours`` in [RST repo](https://github.com/yaircarmon/semisup-adv)
-Since PGD+ is computational defense, we only evaluate the best checkpoint ```bestpoint.pth.tar``` and the last checkpoint```checkpoint.pth.tar``` in the folders ```GAIRAT_result``` and ```GAIR_FAT_result``` respectively. 
+Since PGD+ is computational defense, we only evaluate the best checkpoint ```bestpoint.pth.tar``` and the last checkpoint ```checkpoint.pth.tar``` in the folders ```GAIRAT_result``` and ```GAIR_FAT_result``` respectively. 
 ```bash
 CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIRAT_result/bestpoint.pth.tar'
 CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --model './GAIR_FAT_result/bestpoint.pth.tar'
