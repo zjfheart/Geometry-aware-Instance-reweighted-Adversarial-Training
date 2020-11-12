@@ -26,7 +26,7 @@ Refer to [FAT's GitHub](https://github.com/zjfheart/Friendly-Adversarial-Trainin
 
 OR using codes in this repo by setting
 
-```python GAIRAT.py --epsilon 0.031 --net 'resnet18' --Lambda_max float('inf')``` 
+```python GAIRAT.py --epsilon 0.031 --net 'resnet18' --Lambda 'inf'``` 
 
 to recover the standard AT (Madry's).
 
@@ -88,7 +88,7 @@ CUDA_VISIBLE_DEVICES='0' python GART_FAT.py
 * How to recover the original FAT and AT using our code? 
 
 ```bash
-CUDA_VISIBLE_DEVICES='0' python GARAT.py --Lambda= --output_dir './AT_results/' 
+CUDA_VISIBLE_DEVICES='0' python GARAT.py --output_dir './AT_results/' 
 CUDA_VISIBLE_DEVICES='0' python GART_FAT.py 
 ```
 
