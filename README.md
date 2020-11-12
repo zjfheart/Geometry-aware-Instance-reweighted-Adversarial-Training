@@ -112,8 +112,8 @@ CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --model './GAIR_FAT_result/bestpoint
 
 ## Benchmarking robustness with additional 500K unlabeled data on CIFAR-10 dataset.
 
-In this repo, we unleash the full power of our geometry-aware instance-reweighted methods by incorporating 500K unlabeled data. 
-In terms of both metrics, i.e., natural acc and robustness, we can obtain the best WRN-28-10 model among all public available robust models. <br/>
+In this repo, we unleash the full power of our geometry-aware instance-reweighted methods by incorporating 500K unlabeled data (i.e., **GAIR-RST**). 
+In terms of both evaluation metrics, i.e., generalization and robustness, we can obtain the best WRN-28-10 model among all public available robust models. <br/>
 
 * How to create the such the superior model from scratch? 
 1. Download ```ti_500K_pseudo_labeled.pickle``` containing our 500K pseudo-labeled TinyImages from this [link](https://drive.google.com/file/d/1LTw3Sb5QoiCCN-6Y5PEKkq9C9W60w-Hi/view) (Auxillary data provided by Carmon et al. 2019). Store ```ti_500K_pseudo_labeled.pickle``` into the folder ```./data```<br/>
@@ -122,7 +122,7 @@ In terms of both metrics, i.e., natural acc and robustness, we can obtain the be
 chmod +x ./GAIR_RST/run_training.sh
 ./GAIR_RST/run_training.sh
 ```
-3. We evaluate our robust model using natural test accuracy and roubust test accuracy by [Auto Attack](https://github.com/fra31/auto-attack). 
+3. We evaluate the robust model using natural test accuracy on natural test data and roubust test accuracy by [Auto Attack](https://github.com/fra31/auto-attack). 
 Auto Attack is combination of two white box attacks and two black box attacks. 
 ```bash
 chmod +x ./GAIR_RST/autoattack/examples/run_training.sh
@@ -144,7 +144,7 @@ We welcome various attack methods to attack our defense models. For cifar-10 dat
 
 Download our pretrained models ```checkpoint-epoch200.pt``` into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link](https://drive.google.com/drive/folders/1Ry7q_NbCgeJsjSwxXpRfi1zSc_jdVJf6?usp=sharing).
 
-You can evaluate this model through ```./GAIR_RST/autoattack/examples/run.sh```
+You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples/run.sh```
 
 ## Reference
 ```
