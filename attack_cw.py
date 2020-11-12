@@ -2,6 +2,9 @@
 Implementation of L_infty Carlini-Wagner attack based on the L2 implementation
 in FoolBox v1.9 (with many dependencies on that pakage)
 https://github.com/bethgelab/foolbox
+
+For PGD plus evaluation
+Based on https://github.com/yaircarmon/semisup-adv
 """
 
 try:

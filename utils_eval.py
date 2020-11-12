@@ -1,6 +1,6 @@
 """
-Utilities. Partially based on code from
-https://github.com/modestyachts/CIFAR-10.1
+Utilities for PGD plus evaluation. 
+Based on code from https://github.com/yaircarmon/semisup-adv
 """
 import os
 import numpy as np

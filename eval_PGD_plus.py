@@ -1,6 +1,6 @@
 """
 Evaluate robustness against specific attack.
-Loosely based on code from https://github.com/yaodongyu/TRADES
+Based on code from https://github.com/yaircarmon/semisup-adv
 """
 
 import os

@@ -1,5 +1,6 @@
 """
-Datasets with unlabeled (or pseudo-labeled) data
+Datasets with unlabeled (or pseudo-labeled) data for PGD plus evaluation
+Based on https://github.com/yaircarmon/semisup-adv
 """
 
 from torchvision.datasets import CIFAR10, SVHN

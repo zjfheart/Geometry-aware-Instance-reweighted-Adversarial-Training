@@ -1,5 +1,10 @@
 ### PGD implementation
 
+"""
+For PGD plus evaluation
+Based on https://github.com/yaircarmon/semisup-adv
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
