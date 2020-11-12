@@ -4,7 +4,7 @@ import torchvision
 import torch.optim as optim
 from torchvision import transforms
 from models import *
-from GAIRLoss import GAIRLoss
+from GAIR import GAIR
 import numpy as np
 import attack_generator as attack
 from utils import Logger
@@ -29,11 +29,11 @@ parser.add_argument('--lr-schedule', default='piecewise', choices=['superconverg
 parser.add_argument('--lr-max', default=0.1, type=float)
 parser.add_argument('--lr-one-drop', default=0.01, type=float)
 parser.add_argument('--lr-drop-epoch', default=100, type=int)
-parser.add_argument('--Lambda',type=float, default=-1.0, help='parameter for GAIRLoss')
+parser.add_argument('--Lambda',type=float, default=-1.0, help='parameter for GAIR')
 parser.add_argument('--Lambda_max',type=float, default=float('inf'), help='max Lambda')
 parser.add_argument('--Lambda_schedule', default='fixed', choices=['linear', 'piecewise', 'fixed'])
 parser.add_argument('--weight_assignment_function', default='Tanh', choices=['Discrete','Sigmoid','Tanh'])
-parser.add_argument('--begin_epoch', type=int, default=60, help='when to use GAIRLoss')
+parser.add_argument('--begin_epoch', type=int, default=60, help='when to use GAIR')
 args = parser.parse_args()
 
 # Training settings
@@ -140,8 +140,10 @@ def train(epoch, model, train_loader, optimizer, Lambda):
 
         if (epoch + 1) >= args.begin_epoch:
             Kappa = Kappa.cuda()
+            loss = nn.CrossEntropyLoss(reduce=False)(logit, target)
             # Calculate weight assignment according to geometry value
-            loss = GAIRLoss(logit, target, args.num_steps, Kappa, Lambda, loss_fn=args.weight_assignment_function)
+            normalized_reweight = GAIR(args.num_steps, Kappa, Lambda, args.weight_assignment_function)
+            loss = loss.mul(normalized_reweight).mean()
         else:
             loss = nn.CrossEntropyLoss(reduce="mean")(logit, target)
         
