@@ -142,9 +142,9 @@ chmod +x ./GAIR_RST/autoattack/examples/run_training.sh
 
 We welcome various attack methods to attack our defense models. For cifar-10 dataset, we normalize all images into ```[0,1]```. <br/>
 
-Download our pretrained models into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link]().
+Download our pretrained models ```checkpoint-epoch200.pt``` into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link](https://drive.google.com/drive/folders/1Ry7q_NbCgeJsjSwxXpRfi1zSc_jdVJf6?usp=sharing).
 
-You can evaluate this model through ```./GAIR_RST/autoattack/examples/run_training.sh```
+You can evaluate this model through ```./GAIR_RST/autoattack/examples/run.sh```
 
 ## Reference
 ```
