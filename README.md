@@ -92,6 +92,7 @@ CUDA_VISIBLE_DEVICES='0' python GARAT.py --Lambda 'inf' --output_dir './AT_resul
 CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --Lambda 'inf' --output_dir './FAT_results' 
 ```
 
+* Evaluations
 After running, you can find ```./GAIRAT_result/log_results.txt``` and ```./GAIR_FAT_result/log_results.txt``` for checking Natural Acc. and PGD-20 test Acc. <br/>
 We also evaluate our models using PGD+. PGD+ is the same as ``PGD_ours`` in [RST repo](https://github.com/yaircarmon/semisup-adv)
 Since PGD+ is computational defense, we only evaluate the best checkpoint ```bestpoint.pth.tar``` and the last checkpoint ```checkpoint.pth.tar``` in the folders ```GAIRAT_result``` and ```GAIR_FAT_result``` respectively. 
@@ -141,7 +142,7 @@ chmod +x ./GAIR_RST/autoattack/examples/run_training.sh
 
 We welcome various attack methods to attack our defense models. For cifar-10 dataset, we normalize all images into ```[0,1]```. <br/>
 
-Download our pretrained models into the folder ``./GAIR_RST/GARR_RST_results`` hrough this [Google Drive link]().
+Download our pretrained models into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link]().
 
 You can evaluate this model through ```./GAIR_RST/autoattack/examples/run_training.sh```
 
