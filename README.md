@@ -63,10 +63,10 @@ To implement the idea, we propose geometry-aware instance-reweighted adversarial
 The illustration of GAIRAT. GAIRAT explicitly gives larger weights on the losses of adversarial data (larger red), whose natural counterparts are closer to the decision boundary (lighter blue). GAIRAT explicitly gives smaller weights on the losses of adversarial data (smaller red), whose natural counterparts are farther away from the decision boundary (darker blue). </p>
 
 ## GAIRAT's Implementation
-For updating the model, GAIRAT assigns instance dependent weight on the loss of the adversarial data (found in ```GAIRAT.py```). <br/>
-The instance dependent weight depends on ```num_steps```, which indicates the least PGD step numbers for the misclassified adversarial variant. <br/>
+For updating the model, GAIRAT assigns instance dependent weight (```reweight```) on the loss of the adversarial data (found in ```GAIRLoss.py```). <br/>
+The instance dependent weight depends on ```num_steps```, which indicates the least PGD step numbers needed for the misclassified adversarial variant. <br/>
 
-The details will be determined once the name are fixed.........
+
 
 ## Preferred Prerequisites
 
@@ -76,7 +76,59 @@ The details will be determined once the name are fixed.........
 * numpy
 
 ## Running GAIRAT, GAIR-FAT on benchmark datasets  (CIFAR-10 and SVHN)
+(To be updated)
 
+Here are examples:
+
+* Train GAIRAT and GAIR-FAT on WRN-32-10 model on CIFAR-10 and compare our results with [AT](https://arxiv.org/abs/1706.06083), [FAT](https://arxiv.org/abs/2002.11242)
+```bash
+CUDA_VISIBLE_DEVICES='0' python GARAT.py 
+CUDA_VISIBLE_DEVICES='0' python GART_FAT.py 
+```
+* How to recover the original FAT and AT using our code? 
+
+```bash
+CUDA_VISIBLE_DEVICES='0' python GARAT.py --Lambda= --output_dir './AT_results/' 
+CUDA_VISIBLE_DEVICES='0' python GART_FAT.py 
+```
+
+After running, you can find ```./GAIRAT_result/log_results.txt``` and ```./GAIR_FAT_result/log_results.txt``` for checking Natural Acc. and PGD-20 test Acc. <br/>
+We also evaluate our models using PGD+. PGD+ is the same as ``PGD_ours`` in [RST repo](https://github.com/yaircarmon/semisup-adv)
+Since PGD+ is computational defense, we only evaluate the best checkpoint ```bestpoint.pth.tar``` and the last checkpoint```checkpoint.pth.tar``` in the folders ```GAIRAT_result``` and ```GAIR_FAT_result``` respectively. 
+```bash
+CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIRAT_result/bestpoint.pth.tar'
+CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --model './GAIR_FAT_result/bestpoint.pth.tar'
+```
 
 ### White-box evaluations on WRN-32-10
-    
+
+ Defense              	| Natural Acc. 	| PGD-20 Acc. | PGD+ Acc. | 
+|-----------------------|-----------------------|------------------|-----------------|
+|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 00.00%	|  00.00%	|     00.00%	    |
+| [FAT](https://arxiv.org/abs/2002.11242)  		|  00.00%  	|     00.00%      |     00.00%     |
+| GAIRAT  |  **00.00**![](http://latex.codecogs.com/gif.latex?\pm)0.221%   	|00.00![](http://latex.codecogs.com/gif.latex?\pm)0.355%| 46.13![](http://latex.codecogs.com/gif.latex?\pm)0.049%|
+| GAIR-FAT		|  00.00%   	|   00.00%   		|     00.00%    	|
+
+## Benchmarking robustness with additional 500K unlabeled data on CIFAR-10 dataset.
+
+In this repo, we unleash the full power of our geometry-aware instance-reweighted methods by incorporating 500K unlabeled data. 
+In terms of both metrics, i.e., natural acc and robustness, we can obtain the best WRN-28-10 model among all public available robust models. <br/>
+
+* How to create the such the superior model from scratch? 
+1. Download ```ti_500K_pseudo_labeled.pickle``` containing our 500K pseudo-labeled TinyImages from this [link](https://drive.google.com/file/d/1LTw3Sb5QoiCCN-6Y5PEKkq9C9W60w-Hi/view) (Auxillary data provided by Carmon et al. 2019). Store ```ti_500K_pseudo_labeled.pickle``` into the folder ```./data```<br/>
+2. You may need mutilple GPUs for running this. 
+```bash
+chmod +x ./GAIR_RST/run_training.sh
+./GAIR_RST/run_training.sh
+```
+3. 
+
+
+### White-box evaluations on WRN-28-10
+
+ Defense              	| Natural Acc. 	| AA Acc. |
+|-----------------------|-----------------------|------------------|
+| [RST](https://arxiv.org/abs/1905.13736)  		|  89.69%  	|     59.53%      |
+|[MART](https://openreview.net/forum?id=rklOg6EFwS)		|87.50%	|  56.29%	| 
+| [AT-AWP](https://arxiv.org/abs/2004.05884)  |  88.25   	|60.04%| 
+| GAIR-RST		|  **89.80%**   	|   **60.90%**   		|
