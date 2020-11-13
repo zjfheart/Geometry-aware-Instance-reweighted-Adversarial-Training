@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str, default='~/dataset/cifar-10')
     parser.add_argument('--norm', type=str, default='Linf')
-    parser.add_argument('--epsilon', type=float, default=0.031)
+    parser.add_argument('--epsilon', type=float, default=8./255.)
     parser.add_argument('--model', type=str, default='./model_test.pt')
     parser.add_argument('--n_ex', type=int, default=1000)
     parser.add_argument('--individual', action='store_true')
