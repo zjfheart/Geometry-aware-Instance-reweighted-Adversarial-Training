@@ -105,7 +105,7 @@ CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIR_FAT_result/best
 
  Defense （best checkpoint）        	| Natural Acc. 	| PGD-20 Acc. | PGD+ Acc. | 
 |-----------------------|-----------------------|------------------|-----------------|
-|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 86.92 % $\pm$ 0.24%	|  51.96% $\pm$ 0.21%	|    51.28%	$\pm$ 0.23%    |
+|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 86.92 % ![](https://latex.codecogs.com/gif.latex?\pm) 0.24%	|  51.96% $\pm$ 0.21%	|    51.28%	$\pm$ 0.23%    |
 | [FAT](https://arxiv.org/abs/2002.11242)  		|  **89.16% $\pm$ 0.15%**  	|     51.24% $\pm$ 0.14%     |     46.14% $\pm$ 0.19%     |
 | GAIRAT  |  85.75% $\pm$ 0.23%  	|**57.81% $\pm$ 0.54%**| **55.61% $\pm$ 0.61%**|
 | GAIR-FAT		|  88.59% $\pm$ 0.12%   	|   56.21% $\pm$ 0.52  		|     53.50% $\pm$ 0.60%    	|
