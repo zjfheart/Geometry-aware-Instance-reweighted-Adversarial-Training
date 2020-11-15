@@ -82,14 +82,14 @@ Here are examples:
 
 * Train GAIRAT and GAIR-FAT on WRN-32-10 model on CIFAR-10 and compare our results with [AT](https://arxiv.org/abs/1706.06083), [FAT](https://arxiv.org/abs/2002.11242)
 ```bash
-CUDA_VISIBLE_DEVICES='0' python GARAT.py 
-CUDA_VISIBLE_DEVICES='0' python GART_FAT.py 
+CUDA_VISIBLE_DEVICES='0' python GAIRAT.py 
+CUDA_VISIBLE_DEVICES='0' python GAIR_FAT.py 
 ```
 * How to recover the original FAT and AT using our code? 
 
 ```bash
-CUDA_VISIBLE_DEVICES='0' python GARAT.py --Lambda 'inf' --output_dir './AT_results' 
-CUDA_VISIBLE_DEVICES='0' python GART_FAT.py --Lambda 'inf' --output_dir './FAT_results' 
+CUDA_VISIBLE_DEVICES='0' python GAIRAT.py --Lambda 'inf' --output_dir './AT_results' 
+CUDA_VISIBLE_DEVICES='0' python GAIR_FAT.py --Lambda 'inf' --output_dir './FAT_results' 
 ```
 
 * Evaluations
@@ -153,7 +153,7 @@ chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 
 We welcome various attack methods to attack our defense models. For cifar-10 dataset, we normalize all images into ```[0,1]```. <br/>
 
-Download our pretrained models ```checkpoint-epoch200.pt``` into the folder ``./GAIR_RST/GARR_RST_results`` through this [Google Drive link](https://drive.google.com/drive/folders/1Ry7q_NbCgeJsjSwxXpRfi1zSc_jdVJf6?usp=sharing).
+Download our pretrained models ```checkpoint-epoch200.pt``` into the folder ``./GAIR_RST/GAIR_RST_results`` through this [Google Drive link](https://drive.google.com/drive/folders/1Ry7q_NbCgeJsjSwxXpRfi1zSc_jdVJf6?usp=sharing).
 
 You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples/run_eval.sh```
 
