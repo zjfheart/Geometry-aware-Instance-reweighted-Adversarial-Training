@@ -108,9 +108,15 @@ CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIR_FAT_result/best
 |[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 86.92 % ![](https://latex.codecogs.com/gif.latex?\pm) 0.24%	|  51.96% ![](https://latex.codecogs.com/gif.latex?\pm) 0.21%	|    51.28%	![](https://latex.codecogs.com/gif.latex?\pm) 0.23%    |
 | [FAT](https://arxiv.org/abs/2002.11242)  		|  **89.16% ![](https://latex.codecogs.com/gif.latex?\pm) 0.15%**  	|     51.24% ![](https://latex.codecogs.com/gif.latex?\pm) 0.14%     |     46.14% ![](https://latex.codecogs.com/gif.latex?\pm) 0.19%     |
 | GAIRAT  |  85.75% ![](https://latex.codecogs.com/gif.latex?\pm) 0.23%  	|**57.81% ![](https://latex.codecogs.com/gif.latex?\pm) 0.54%**| **55.61% ![](https://latex.codecogs.com/gif.latex?\pm) 0.61%**|
-| GAIR-FAT		|  88.59% ![](https://latex.codecogs.com/gif.latex?\pm) 0.12%   	|   56.21% ![](https://latex.codecogs.com/gif.latex?\pm) 0.52  		|     53.50% ![](https://latex.codecogs.com/gif.latex?\pm) 0.60%    	|
+| GAIR-FAT		|  88.59% ![](https://latex.codecogs.com/gif.latex?\pm) 0.12%   	|   56.21% ![](https://latex.codecogs.com/gif.latex?\pm) 0.52%  		|     53.50% ![](https://latex.codecogs.com/gif.latex?\pm) 0.60%    	|
 
-For more details, refer to Table 1 in the paper. 
+ Defense （last checkpoint）        	| Natural Acc. 	| PGD-20 Acc. | PGD+ Acc. | 
+|-----------------------|-----------------------|------------------|-----------------|
+|[AT(Madry)](https://arxiv.org/abs/1706.06083)		| 86.62 % ![](https://latex.codecogs.com/gif.latex?\pm) 0.22%	|  46.73% ![](https://latex.codecogs.com/gif.latex?\pm) 0.08%	|    46.08%	![](https://latex.codecogs.com/gif.latex?\pm) 0.07%    |
+| [FAT](https://arxiv.org/abs/2002.11242)  		|  88.18% ![](https://latex.codecogs.com/gif.latex?\pm) 0.19%  	|     46.79% ![](https://latex.codecogs.com/gif.latex?\pm) 0.34%     |     45.80% ![](https://latex.codecogs.com/gif.latex?\pm) 0.16%     |
+| GAIRAT  |  85.49% ![](https://latex.codecogs.com/gif.latex?\pm) 0.25%  	|**53.76% ![](https://latex.codecogs.com/gif.latex?\pm) 0.49%**| **50.32% ![](https://latex.codecogs.com/gif.latex?\pm) 0.48%**|
+| GAIR-FAT		|  **88.44% ![](https://latex.codecogs.com/gif.latex?\pm) 0.10%**   	|   50.64% ![](https://latex.codecogs.com/gif.latex?\pm) 0.56%  		|     47.51% ![](https://latex.codecogs.com/gif.latex?\pm) 0.51%    	|
+
 
 ## Benchmarking robustness with additional 500K unlabeled data on CIFAR-10 dataset.
 
