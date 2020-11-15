@@ -117,6 +117,7 @@ CUDA_VISIBLE_DEVICES='0' python eval_PGD_plus.py --model './GAIR_FAT_result/best
 | GAIRAT  |  85.49% ![](https://latex.codecogs.com/gif.latex?\pm) 0.25%  	|**53.76% ![](https://latex.codecogs.com/gif.latex?\pm) 0.49%**| **50.32% ![](https://latex.codecogs.com/gif.latex?\pm) 0.48%**|
 | GAIR-FAT		|  **88.44% ![](https://latex.codecogs.com/gif.latex?\pm) 0.10%**   	|   50.64% ![](https://latex.codecogs.com/gif.latex?\pm) 0.56%  		|     47.51% ![](https://latex.codecogs.com/gif.latex?\pm) 0.51%    	|
 
+For more details, refer to Table 1 in the paper. 
 
 ## Benchmarking robustness with additional 500K unlabeled data on CIFAR-10 dataset.
 
