@@ -152,7 +152,7 @@ The robust accuracy is evaluated at `eps = 8/255`, except for those marked with 
 |:---:|---|:---:|:---:|---:|---:|---:|
 |**1**| [(Gowal et al., 2020)](https://arxiv.org/abs/2010.03593)‡| *authors*| WRN-28-10| 89.48| 62.76| 62.80|
 |**2**| [(Wu et al., 2020b)](https://arxiv.org/abs/2004.05884)‡| *available*| WRN-28-10| 88.25| 60.04| 60.04|
-|**-**| **[GAIR-RST (ours)\*]**(https://arxiv.org/abs/2010.01736)‡| *available*| WRN-28-10| 89.36| 59.64| 59.64|
+|**-**| **[GAIR-RST (ours)\*](https://arxiv.org/abs/2010.01736)**‡| *available*| WRN-28-10| 89.36| 59.64| 59.64|
 |**3**| [(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)‡| *available*| WRN-28-10| 89.69| 62.5| 59.53|
 |**4**| [(Sehwag et al., 2020)](https://github.com/fra31/auto-attack/issues/7)‡| *available*| WRN-28-10| 88.98| -| 57.14|
 |**5**| [(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)‡| *available*| WRN-28-10| 87.50| 65.04| 56.29|
