@@ -161,9 +161,7 @@ The robust accuracy is evaluated at `eps = 8/255`, except for those marked with 
 |**8**| [(Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)| *available*| WRN-28-10| 89.98| 60.6| 36.64|
 |**9**| [(Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr)| *available*| WRN-28-10| 90.25| 68.7| 36.45|
 
-
-
-
+The results show our GAIR-RST method can facilitate a competitive model by utilizing additional unlabeled data.
 
 
 
