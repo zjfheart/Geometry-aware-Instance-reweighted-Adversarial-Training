@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 from wideresnet import *
 
 import sys
-sys.path.insert(0,'..')
+sys.path.insert(0, '..')
 
 from resnet import *
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('--norm', type=str, default='Linf')
     parser.add_argument('--epsilon', type=float, default=8./255.)
     parser.add_argument('--model', type=str, default='./model_test.pt')
-    parser.add_argument('--n_ex', type=int, default=1000)
+    parser.add_argument('--n_ex', type=int, default=10000)
     parser.add_argument('--individual', action='store_true')
     parser.add_argument('--save_dir', type=str, default='./results')
     parser.add_argument('--batch_size', type=int, default=500)
@@ -83,6 +83,6 @@ if __name__ == '__main__':
             adv_complete = adversary.run_standard_evaluation_individual(x_test[:args.n_ex],
                 y_test[:args.n_ex], bs=args.batch_size)
             
-            torch.save(adv_complete, '{}/{}_{}_individual_1_{}_eps_{:.5f}_plus_{}_cheap_{}.pth'.format(
+            torch.save(adv_complete, '{}/{}_{}_individual_1_{}_eps_{:.5f}_plus_{}_cheap.pth'.format(
                 args.save_dir, 'aa', args.version, args.n_ex, args.epsilon))
                 
