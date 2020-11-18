@@ -139,7 +139,8 @@ chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 
 ### White-box evaluations on WRN-28-10
 
-We evaluate the robustness on CIFAR-10 dataset under [auto-attack](https://github.com/fra31/auto-attack)[(Croce & Hein, 2020)](https://arxiv.org/abs/2003.01690). 
+We evaluate the robustness on CIFAR-10 dataset under [auto-attack](https://github.com/fra31/auto-attack) [(Croce & Hein, 2020)](https://arxiv.org/abs/2003.01690). 
+
 Here we list the results using WRN-28-10 on the [leadboard](https://github.com/fra31/auto-attack/blob/master/README.md) and our results. 
 
 
