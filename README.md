@@ -139,14 +139,30 @@ chmod +x ./GAIR_RST/autoattack/examples/run_eval.sh
 
 ### White-box evaluations on WRN-28-10
 
- Defense (public available models)              	| Natural Acc. 	| AA Acc. |
-|-----------------------|-----------------------|------------------|
-[pre-training](https://arxiv.org/pdf/1901.09960.pdf) | 87.11%	| 54.92% | 
-| [RST](https://arxiv.org/abs/1905.13736)  		|  89.69%  	|     59.53%      |
-|[MART](https://openreview.net/forum?id=rklOg6EFwS)		|87.50%	|  56.29%	| 
-[HYDRA](https://arxiv.org/pdf/2002.10509.pdf) | 88.98% | 57.14%
-|[AT-AWP](https://arxiv.org/abs/2004.05884)  |  88.25%   |60.04%| 
-| GAIR-RST		|  **89.80%**   	|   **60.90%**   		|
+We evaluate the robustness on CIFAR-10 dataset under [auto-attack](https://github.com/fra31/auto-attack)[(Croce & Hein, 2020)](https://arxiv.org/abs/2003.01690). 
+Here we list the results using WRN-28-10 on the [leadboard](https://github.com/fra31/auto-attack/blob/master/README.md) and our results. 
+
+
+## CIFAR-10 - Linf
+The robust accuracy is evaluated at `eps = 8/255`, except for those marked with * for which `eps = 0.031`, where `eps` is the maximal Linf-norm allowed for the adversarial perturbations. The `eps` used is the same set in the original papers.\
+**Note**: ‡ indicates models which exploit additional data for training (e.g. unlabeled data, pre-training).
+
+|#    |paper           |model     |architecture |clean         |report. |AA  |
+|:---:|---|:---:|:---:|---:|---:|---:|
+|**2**| [(Gowal et al., 2020)](https://arxiv.org/abs/2010.03593)‡| *authors*| WRN-28-10| 89.48| 62.76| 62.80|
+|**3**| [(Wu et al., 2020b)](https://arxiv.org/abs/2004.05884)‡| *available*| WRN-28-10| 88.25| 60.04| 60.04|
+|**5**| [(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)‡| *available*| WRN-28-10| 89.69| 62.5| 59.53|
+|**7**| [(Sehwag et al., 2020)](https://github.com/fra31/auto-attack/issues/7)‡| *available*| WRN-28-10| 88.98| -| 57.14|
+|**9**| [(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)‡| *available*| WRN-28-10| 87.50| 65.04| 56.29|
+|**12**| [(Hendrycks et al., 2019)](https://arxiv.org/abs/1901.09960)‡| *available*| WRN-28-10| 87.11| 57.4| 54.92|
+|**33**| [(Moosavi-Dezfooli et al., 2019)](http://openaccess.thecvf.com/content_CVPR_2019/html/Moosavi-Dezfooli_Robustness_via_Curvature_Regularization_and_Vice_Versa_CVPR_2019_paper)| *authors*| WRN-28-10| 83.11| 41.4| 38.50|
+|**34**| [(Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)| *available*| WRN-28-10| 89.98| 60.6| 36.64|
+|**35**| [(Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr)| *available*| WRN-28-10| 90.25| 68.7| 36.45|
+
+
+
+
+
 
 
 ### Wanna download our superior model for other purposes? Sure! 
