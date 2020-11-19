@@ -148,7 +148,7 @@ Here we list the results using WRN-28-10 on the [leadboard](https://github.com/f
 The robust accuracy is evaluated at `eps = 8/255`, except for those marked with * for which `eps = 0.031`, where `eps` is the maximal Linf-norm allowed for the adversarial perturbations. The `eps` used is the same set in the original papers.\
 **Note**: ‡ indicates models which exploit additional data for training (e.g. unlabeled data, pre-training).
 
-|#    |paper           |model     |architecture |clean         |report. |AA  |
+|#    |method/paper           |model     |architecture |clean         |report. |AA  |
 |:---:|---|:---:|:---:|---:|---:|---:|
 |**1**| [(Gowal et al., 2020)](https://arxiv.org/abs/2010.03593)‡| *authors*| WRN-28-10| 89.48| 62.76| 62.80|
 |**2**| [(Wu et al., 2020b)](https://arxiv.org/abs/2004.05884)‡| *available*| WRN-28-10| 88.25| 60.04| 60.04|
