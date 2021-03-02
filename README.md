@@ -16,7 +16,7 @@ In this repo, you will know:
 </p>
 <p align="left">
 We plot standard training error (Natural) and adversarial training error (PGD-10) over the training epochs of the standard AT (Madry's) on CIFAR-10 dataset. 
-  *Left panel*: AT on different sizes of network. 
+  *Left panel*: AT on different sizes of network (blue lines) and standard training (ST) on ResNet-18. 
   *Right panel*: AT on ResNet-18 under different perturbation bounds eps_train. </p>
   
   
@@ -31,8 +31,8 @@ OR using codes in this repo by setting
 to recover the standard AT (Madry's).
 
 
-The over-parameterized models that fit nataral data entirely in the standard training are still far from enough for fitting adversarial data in adversarial training.
-Compared with standard training fitting the natural data points, adversarial training smooths the neighborhoods of natural data, so that adversarial data consume significantly more model capacity than natural data. 
+The over-parameterized models that fit nataral data entirely in the standard training (ST) are still far from enough for fitting adversarial data in adversarial training (AT).
+Compared with ST fitting the natural data points, AT smooths the neighborhoods of natural data, so that adversarial data consume significantly more model capacity than natural data. 
 
 The volume of this neighborhood is exponentially ![](http://latex.codecogs.com/gif.latex?|1+\epsilon_{train}|^{X}) large w.r.t. the input dimension ![](http://latex.codecogs.com/gif.latex?|X|), even if ![](http://latex.codecogs.com/gif.latex?\epsilon_{train}) is small.
 
