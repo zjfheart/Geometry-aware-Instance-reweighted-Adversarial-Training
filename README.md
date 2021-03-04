@@ -1,8 +1,7 @@
 # Geometry-aware Instance-reweighted Adversarial Training
 
-This repository provides codes for geometry-aware instance-reweighted adversarial training methods,
-based on the paper **Geometry-aware Instance-reweighted Adversarial Training** 
-(https://arxiv.org/abs/2010.01736) <br/>
+This repository provides codes for **Geometry-aware Instance-reweighted Adversarial Training** 
+(https://openreview.net/forum?id=iAX0l6Cz8ub) (ICLR oral)<br/>
 *Jingfeng Zhang, Jianing Zhu, Gang Niu, Bo Han, Masashi Sugiyama and Mohan Kankanhalli*
 
 ## What is the nature of adversarial training?
