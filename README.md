@@ -183,5 +183,5 @@ You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples
 ```
 
 # Contact
-Please contact j-zhang@comp.nus.edu.sg and zhujianing9810@gmail.com if you have any question on the codes.
+Please contact jingfeng.zhang@riken.jp or j-zhang@comp.nus.edu.sg and zhujianing9810@gmail.com if you have any question on the codes.
 
