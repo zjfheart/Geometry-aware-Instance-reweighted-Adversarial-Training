@@ -174,11 +174,13 @@ You can evaluate this pretrained model through ```./GAIR_RST/autoattack/examples
 
 ## Reference
 ```
-@article{zhang2020geometry,
-  title={Geometry-aware Instance-reweighted Adversarial Training},
-  author={Zhang, Jingfeng and Zhu, Jianing and Niu, Gang and Han, Bo and Sugiyama, Masashi and Kankanhalli, Mohan},
-  journal={arXiv:2010.01736},
-  year={2020}
+@inproceedings{
+zhang2021_GAIRAT,
+title={Geometry-aware Instance-reweighted Adversarial Training},
+author={Jingfeng Zhang and Jianing Zhu and Gang Niu and Bo Han and Masashi Sugiyama and Mohan Kankanhalli},
+booktitle={International Conference on Learning Representations},
+year={2021},
+url={https://openreview.net/forum?id=iAX0l6Cz8ub}
 }
 ```
 
