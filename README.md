@@ -15,7 +15,7 @@ In this repo, you will know:
 </p>
 <p align="left">
 We plot standard training error (Natural) and adversarial training error (PGD-10) over the training epochs of the standard AT (Madry's) on CIFAR-10 dataset. 
-  *Left panel*: AT on different sizes of network (blue lines) and standard training (ST) on ResNet-18. 
+  *Left panel*: AT on different sizes of network (blue lines) and standard training (ST, the red line) on ResNet-18. 
   *Right panel*: AT on ResNet-18 under different perturbation bounds eps_train. </p>
   
   
